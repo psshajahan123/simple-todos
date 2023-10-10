@@ -1,0 +1,20 @@
+/* Write your CSS here */
+.list-card-container {
+  display: flex;
+  list-style-type: none;
+  justify-content: space-between;
+}
+
+.list-text {
+  font-family: 'Roboto';
+  font-size: 16px;
+}
+
+.delete-button {
+  color: #ff0b37;
+  background-color: transparent;
+  border: 1px solid #ff0b37;
+  border-radius: 6px;
+  height: 25px;
+  margin: 5px;
+}

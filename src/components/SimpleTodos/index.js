@@ -1,5 +1,7 @@
 import {Component} from 'react'
 
+import {v4 as uuidv4} from 'uuid'
+
 import './index.css'
 
 import TodoItem from '../TodoItem'
@@ -40,7 +42,11 @@ const initialTodosList = [
 ]
 
 class SimpleTodos extends Component {
-  state = {todosList: initialTodosList}
+  state = {todosList: initialTodosList, textInput: ''}
+
+  onChangeInputText = event => {
+    this.setState({textInput: event.target.value})
+  }
 
   deleteTodo = id => {
     const {todosList} = this.state
@@ -48,19 +54,62 @@ class SimpleTodos extends Component {
     this.setState({todosList: filteredTodoList})
   }
 
-  render() {
+  updateTodoItemTitle = (id, newTitle) => {
     const {todosList} = this.state
+    const updatedList = todosList.map(eachItem => {
+      if (eachItem.id === id) {
+        const updatedTodo = {...eachItem, title: newTitle}
+        return updatedTodo
+      }
+      return eachItem
+    })
+
+    this.setState({todosList: updatedList})
+  }
+
+  onSubmitForm = () => {
+    const {textInput} = this.state
+    const newTodo = {
+      id: uuidv4(),
+      title: textInput,
+    }
+
+    this.setState(prevState => ({
+      todosList: [...prevState.todosList, newTodo],
+      textInput: '',
+    }))
+  }
+
+  render() {
+    const {todosList, textInput} = this.state
 
     return (
       <div className="bg-container">
         <div className="container">
           <h1 className="heading">Simple Todos</h1>
+          <form className="input-container">
+            <input
+              type="text"
+              className="input-element"
+              placeholder="Enter Text Here"
+              onChange={this.onChangeInputText}
+              value={textInput}
+            />
+            <button
+              type="button"
+              className="add-button"
+              onClick={this.onSubmitForm}
+            >
+              Add
+            </button>
+          </form>
           <ul className="list-container">
             {todosList.map(eachTodo => (
               <TodoItem
                 todoDetails={eachTodo}
                 key={eachTodo.id}
                 deleteTodo={this.deleteTodo}
+                updateTodoItemTitle={this.updateTodoItemTitle}
               />
             ))}
           </ul>
